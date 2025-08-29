@@ -4,8 +4,9 @@ const API_URL = 'http://localhost:3000/api/internships/';
 
 // Helper function to get the user token from local storage
 const getToken = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  return user ? user.token : null;
+  // FIX: Changed 'user' to 'userInfo' to match the rest of the application
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  return userInfo ? userInfo.token : null;
 };
 
 // Create a new internship
@@ -21,12 +22,8 @@ const createInternship = async (internshipData) => {
   return response.data;
 };
 
-// --- CORRECTED FUNCTION ---
 // Get all internships with optional query parameters for filtering
 const getInternships = async (queryParamsString) => {
-  // This line is the fix. It checks if a query string exists.
-  // If it does, it appends it to the API URL.
-  // Example URL with filters: http://localhost:3000/api/internships/?keyword=React&location=Remote
   const url = queryParamsString ? `${API_URL}?${queryParamsString}` : API_URL;
   const response = await axios.get(url);
   return response.data;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import internshipService from '../api/internshipService';
 import { useAuth } from '../contexts/AuthContext';
-import { FaBuilding } from 'react-icons/fa'; // 1. Import a placeholder icon
+import { FaBuilding } from 'react-icons/fa';
 
 const InternshipListPage = () => {
   // State for storing fetched data and UI status
@@ -14,12 +14,13 @@ const InternshipListPage = () => {
 
   // State for filter inputs
   const [keyword, setKeyword] = useState('');
-  const [location, setLocation] = useState('');
+  const [internshipLocation, setInternshipLocation] = useState('');
   const [stipend, setStipend] = useState('');
   const [duration, setDuration] = useState('');
   const [skills, setSkills] = useState('');
   const [workType, setWorkType] = useState('');
-  const [domain, setDomain] = useState('');
+  // --- NEW: State for the posted date filter ---
+  const [postedDate, setPostedDate] = useState('');
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -42,12 +43,13 @@ const InternshipListPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(locationHook.search);
     setKeyword(params.get('keyword') || '');
-    setLocation(params.get('location') || '');
+    setInternshipLocation(params.get('location') || '');
     setStipend(params.get('stipend') || '');
     setDuration(params.get('duration') || '');
     setSkills(params.get('skills') || '');
     setWorkType(params.get('workType') || '');
-    setDomain(params.get('domain') || '');
+    // --- NEW: Sync postedDate state from URL ---
+    setPostedDate(params.get('postedDate') || '');
     const pageNumber = Number(params.get('pageNumber')) || 1;
     setPage(pageNumber);
     fetchInternships(locationHook.search.substring(1));
@@ -59,24 +61,26 @@ const InternshipListPage = () => {
     setPage(newPage);
     const queryParams = new URLSearchParams();
     if (keyword.trim()) queryParams.append('keyword', keyword.trim());
-    if (location.trim()) queryParams.append('location', location.trim());
+    if (internshipLocation.trim()) queryParams.append('location', internshipLocation.trim());
     if (stipend) queryParams.append('stipend', stipend);
     if (duration) queryParams.append('duration', duration);
     if (skills.trim()) queryParams.append('skills', skills.trim());
     if (workType) queryParams.append('workType', workType);
-    if (domain.trim()) queryParams.append('domain', domain.trim());
+    // --- NEW: Add postedDate to the search query ---
+    if (postedDate) queryParams.append('postedDate', postedDate);
     queryParams.append('pageNumber', newPage);
     navigate(`?${queryParams.toString()}`);
   };
 
   const clearFilters = () => {
     setKeyword('');
-    setLocation('');
+    setInternshipLocation('');
     setStipend('');
     setDuration('');
     setSkills('');
     setWorkType('');
-    setDomain('');
+    // --- NEW: Clear the postedDate filter ---
+    setPostedDate('');
     setPage(1);
     navigate('');
   };
@@ -106,7 +110,7 @@ const InternshipListPage = () => {
             <input
               type="text"
               id="keyword"
-              placeholder="Search by title, description, location, or domain..."
+              placeholder="Search by title, description, location, or skill..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent transition duration-200"
@@ -120,8 +124,8 @@ const InternshipListPage = () => {
               type="text"
               id="location"
               placeholder="Location (e.g., Remote, Delhi)"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={internshipLocation}
+              onChange={(e) => setInternshipLocation(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent transition duration-200"
               autoComplete="address-level2"
             />
@@ -137,13 +141,9 @@ const InternshipListPage = () => {
               autoComplete="off"
             >
               <option value="">All Stipends</option>
-              <option value="Unpaid">Unpaid</option>
               <option value="Paid">Paid</option>
-              <option value="Negotiable">Negotiable</option>
-              <option value="5000">₹5,000+/month</option>
-              <option value="10000">₹10,000+/month</option>
-              <option value="15000">₹15,000+/month</option>
-              <option value="20000">₹20,000+/month</option>
+              <option value="Unpaid">Unpaid</option>
+              <option value="Not Disclosed">Not Disclosed</option>
             </select>
           </div>
 
@@ -157,6 +157,7 @@ const InternshipListPage = () => {
               autoComplete="off"
             >
               <option value="">All Durations</option>
+              <option value="2 Months">2 Months</option>
               <option value="3 Months">3 Months</option>
               <option value="4 Months">4 Months</option>
               <option value="5 Months">5 Months</option>
@@ -195,16 +196,20 @@ const InternshipListPage = () => {
           </div>
 
           <div>
-            <label htmlFor="domain" className="sr-only">Domain</label>
-            <input
-              type="text"
-              id="domain"
-              placeholder="Internship Domain"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
+            <label htmlFor="postedDate" className="sr-only">Posted Date</label>
+            <select
+              id="postedDate"
+              value={postedDate}
+              onChange={(e) => setPostedDate(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent transition duration-200"
-              autoComplete="organization-title"
-            />
+              autoComplete="off"
+            >
+              <option value="">Posted Anytime</option>
+              <option value="1">Last 24 hours</option>
+              <option value="3">Last 3 days</option>
+              <option value="7">Last week</option>
+              <option value="30">Last month</option>
+            </select>
           </div>
 
           <div className="md:col-span-3 flex justify-center gap-4 mt-2">
@@ -237,10 +242,10 @@ const InternshipListPage = () => {
               {internships.map((internship) => (
                 <div key={internship._id} className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-100 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex flex-col justify-between">
                   <div>
-                    {/* --- 2. NEW LOGO DISPLAY SECTION --- */}
                     <div className="flex items-start mb-3">
                       {internship.companyLogo ? (
-                        <img src={internship.companyLogo} alt={`${internship.companyName} Logo`} className="w-14 h-14 object-contain rounded-md mr-4 border p-1 bg-white" />
+                        // --- FIX: Removed 'border' and 'p-1' classes ---
+                        <img src={internship.companyLogo} alt={`${internship.companyName} Logo`} className="w-14 h-14 object-contain rounded-md mr-4 bg-white" />
                       ) : (
                         <div className="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-gray-200 rounded-md mr-4">
                           <FaBuilding className="text-gray-400 text-2xl" />
@@ -280,7 +285,7 @@ const InternshipListPage = () => {
                     {user && user.role === 'student' ? (
                       <button
                         onClick={() => handleApplyClick(internship._id)}
-                        className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md"
+                        className="w-full bg-teal-700 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md"
                       >
                         Apply Now
                       </button>
@@ -297,7 +302,6 @@ const InternshipListPage = () => {
               ))}
             </div>
 
-            {/* --- PAGINATION --- */}
             {pages > 1 && (
               <div className="flex justify-center mt-8 space-x-2">
                 {[...Array(pages).keys()].map((x) => (

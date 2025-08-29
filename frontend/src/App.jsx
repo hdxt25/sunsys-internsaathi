@@ -20,7 +20,10 @@ import LandingPage from './pages/LandingPage';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import CollegeListPage from './pages/CollegeListPage';
-import CompanyListPage from './pages/CompanyListPage'; // 1. Import the new CompanyListPage
+import CompanyListPage from './pages/CompanyListPage';
+import ManageAvailabilityPage from './pages/ManageAvailabilityPage'; 
+// --- NEW: Import the AdminVerificationPage ---
+import AdminVerificationPage from './pages/AdminVerificationPage';
 
 function App() {
   return (
@@ -83,6 +86,23 @@ function App() {
                 }
               />
               <Route
+                path="/manage-availability"
+                element={
+                  <ProtectedRoute allowedRoles={['college']}>
+                    <ManageAvailabilityPage />
+                  </ProtectedRoute>
+                }
+              />
+              {/* --- NEW: Add the route for the admin verification page --- */}
+              <Route
+                path="/admin/verify"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminVerificationPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/my-internships"
                 element={
                   <ProtectedRoute allowedRoles={['company']}>
@@ -130,7 +150,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
               <Route
                 path="/colleges"
                 element={
@@ -139,8 +158,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
-              {/* 2. Add the new route for finding companies */}
               <Route
                 path="/companies"
                 element={
@@ -149,7 +166,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
             </Routes>
           </main>
         </div>

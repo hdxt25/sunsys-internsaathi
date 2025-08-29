@@ -46,4 +46,15 @@ const authorizeRoles = (...roles) => {
   };
 };
 
-export { protect, authorizeRoles };
+// --- NEW: Middleware to check if a company is verified ---
+const isCompanyApproved = (req, res, next) => {
+    // This middleware should run AFTER protect() and authorizeRoles('company')
+    if (req.user.verificationStatus !== 'approved') {
+        res.status(403); // Forbidden
+        throw new Error('Your company account has not been approved yet. You cannot post internships.');
+    }
+    next();
+};
+
+
+export { protect, authorizeRoles, isCompanyApproved };

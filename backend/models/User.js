@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema(
       enum: ['student', 'company', 'college', 'admin'],
       default: 'student',
     },
+    // --- Company Specific Fields ---
     companyName: {
       type: String,
       required: function() { return this.role === 'company'; }
@@ -29,6 +30,22 @@ const userSchema = mongoose.Schema(
       type: String,
       required: function() { return this.role === 'company'; }
     },
+    // --- FIX: Added companyLogo field ---
+    companyLogo: {
+        type: String,
+    },
+    verificationStatus: {
+        type: String,
+        enum: ['unverified', 'pending', 'approved', 'rejected'],
+        default: 'unverified',
+        required: function() { return this.role === 'company'; }
+    },
+    verificationDocument: {
+        type: String,
+        default: '',
+        required: function() { return this.role === 'company' && this.isNew; }
+    },
+    // --- College Specific Fields ---
     collegeName: {
       type: String,
       required: function() { return this.role === 'college'; }
@@ -37,6 +54,11 @@ const userSchema = mongoose.Schema(
       type: String,
       required: function() { return this.role === 'college'; }
     },
+    // --- FIX: Added collegeLogo field ---
+    collegeLogo: {
+        type: String,
+    },
+    // --- Student Specific Fields ---
     studentId: {
       type: String,
       required: function() { return this.role === 'student'; },
@@ -47,13 +69,22 @@ const userSchema = mongoose.Schema(
         type: String,
         required: function() { return this.role === 'student'; }
     },
-    resume: String, // Added a field for the resume URL
+    resume: String,
     profilePicture: String,
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+
+userSchema.virtual('availabilityPeriods', {
+  ref: 'Availability',
+  localField: '_id',
+  foreignField: 'college',
+});
+
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {

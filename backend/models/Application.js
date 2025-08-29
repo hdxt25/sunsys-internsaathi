@@ -17,10 +17,10 @@ const applicationSchema = mongoose.Schema(
       required: true,
       ref: 'User',
     },
-    college: { // NEW FIELD: Reference to the student's college
+    college: { // FIX: The 'college' field is now optional
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
+      // 'required: true' has been removed from this field
     },
     applicationDate: {
       type: Date,

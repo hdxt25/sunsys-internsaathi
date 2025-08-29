@@ -13,7 +13,7 @@ const ManageApplicantsPage = () => {
 
   // Redirect if not a company user
   useEffect(() => {
-    if (!user || user.role !== 'company') {
+    if (user && user.role !== 'company') {
       navigate('/login');
     }
   }, [user, navigate]);
@@ -46,7 +46,8 @@ const ManageApplicantsPage = () => {
         )
       );
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to update application status.');
+      // Display the specific error from the backend (e.g., deadline passed)
+      alert(err.response?.data?.message || 'Failed to update status.');
     }
   };
 
@@ -83,6 +84,9 @@ const ManageApplicantsPage = () => {
     );
   }
 
+  // --- FIX: Filter out applications where the internship or applicant has been deleted ---
+  const validApplications = applications.filter(app => app.internship && app.applicant);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 p-6 font-inter animate-fade-in">
       <div className="max-w-7xl mx-auto bg-white p-8 rounded-xl shadow-2xl animate-fade-in">
@@ -90,28 +94,28 @@ const ManageApplicantsPage = () => {
           Manage Applicants
         </h2>
         
-        {applications.length === 0 ? (
+        {validApplications.length === 0 ? (
           <div className="text-center text-gray-600 text-xl py-10">
             No students have applied to your internships yet.
           </div>
         ) : (
           <div className="space-y-6">
-            {applications.map((app) => (
+            {validApplications.map((app) => (
               <div key={app._id} className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-100 transform transition-all duration-300 hover:scale-[1.005]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                   {/* Applicant Details */}
                   <div className="text-left">
                     <h3 className="text-xl font-poppins font-bold text-teal-700 mb-1">
-                      {app.applicant?.name}
+                      {app.applicant.name}
                     </h3>
                     <p className="text-gray-800 font-semibold mb-1">
-                      <span className="font-medium text-gray-600">Applied for:</span> {app.internship?.title}
+                      <span className="font-medium text-gray-600">Applied for:</span> {app.internship.title}
                     </p>
                     <p className="text-gray-600 text-sm">
-                      <span className="font-semibold">Email:</span> {app.applicant?.email}
+                      <span className="font-semibold">Email:</span> {app.applicant.email}
                     </p>
                     <p className="text-gray-600 text-sm">
-                      <span className="font-semibold">Major:</span> {app.applicant?.major}
+                      <span className="font-semibold">Major:</span> {app.applicant.major}
                     </p>
                     <p className="text-gray-600 text-sm">
                       <span className="font-semibold">Applied on:</span> {new Date(app.applicationDate).toLocaleDateString()}

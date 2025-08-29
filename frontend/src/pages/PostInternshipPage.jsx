@@ -1,26 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import internshipService from '../api/internshipService';
 import { useAuth } from '../contexts/AuthContext';
+import { FaInfoCircle } from 'react-icons/fa'; // Import an icon for the guideline
 
 const PostInternshipPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if not a company user or user data is not loaded
-  if (!user || user.role !== 'company') {
-    navigate('/dashboard'); // Or a /not-authorized page
-    return null;
-  }
+  useEffect(() => {
+    if (user && user.role !== 'company') {
+      navigate('/dashboard'); // Or a /not-authorized page
+    }
+  }, [user, navigate]);
+
 
   const [formData, setFormData] = useState({
-    companyName: user.companyName || user.name || '', // Pre-fill with user's registered company name
+    companyName: user?.companyName || user?.name || '', // Pre-fill with user's registered company name
     title: '',
     description: '',
     location: '',
-    workType: 'In-office',
+    workType: 'Remote',
     stipend: 'Unpaid',
-    duration: '3 Months', // Default value set to 3 Months
+    duration: '3 Months',
     internshipDomain: '',
     applicationDeadline: '',
     skillsRequired: '',
@@ -28,18 +32,20 @@ const PostInternshipPage = () => {
     whoCanApply: '',
     perks: '',
     positions: 1,
+    ppoOffered: 'Yes', 
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Optional: If you want to update formData if user.companyName changes (e.g., after a fresh login)
+  // Update formData if user data changes after initial load
   useEffect(() => {
-    if (user && user.companyName && formData.companyName !== user.companyName) {
-      setFormData(prev => ({ ...prev, companyName: user.companyName }));
-    } else if (user && !user.companyName && user.name && formData.companyName !== user.name) {
-      setFormData(prev => ({ ...prev, companyName: user.name }));
+    if (user) {
+        const company = user.companyName || user.name || '';
+        if (formData.companyName !== company) {
+            setFormData(prev => ({ ...prev, companyName: company }));
+        }
     }
-  }, [user]);
+  }, [user, formData.companyName]);
 
 
   const handleChange = (e) => {
@@ -64,13 +70,13 @@ const PostInternshipPage = () => {
       await internshipService.createInternship(dataToSend);
       setSuccess('Internship posted successfully!');
       setFormData({ // Clear form after successful post
-        companyName: user.companyName || user.name || '', // Reset to user's company name
+        companyName: user?.companyName || user?.name || '',
         title: '',
         description: '',
         location: '',
         workType: 'In-office',
         stipend: 'Unpaid',
-        duration: '3 Months', // Reset to 3 Months
+        duration: '3 Months',
         internshipDomain: '',
         applicationDeadline: '',
         skillsRequired: '',
@@ -78,17 +84,35 @@ const PostInternshipPage = () => {
         whoCanApply: '',
         perks: '',
         positions: 1,
+        ppoOffered: 'No', // Reset PPO field
       });
-      navigate('/dashboard');
+      setTimeout(() => navigate('/dashboard'), 2000); // Redirect after 2 seconds
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to post internship.');
     }
   };
 
+  // Render a loading state or null if user data is not yet available
+  if (!user || user.role !== 'company') {
+    return null; 
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-100 p-4 font-raleway animate-fade-in">
-      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl transform transition-all duration-300 hover:scale-105">
+      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl">
         <h2 className="text-3xl font-extrabold text-center mb-6 text-gray-800">Post a New Internship</h2>
+        
+        {/* --- NEW: Posting Guideline for Companies --- */}
+        <div className="bg-emerald-50 border-l-4 border-emerald-200 text-emerald-700 p-4 rounded-r-lg mb-6" role="alert">
+          <div className="flex">
+            <div className="py-1"><FaInfoCircle className="mr-3 text-xl" /></div>
+            <div>
+              <p className="font-bold">Posting Guideline: Plan for Success</p>
+              <p className="text-sm">To attract the best talent, we recommend posting your internship at least <strong>one month</strong> before the start date.</p>
+            </div>
+          </div>
+        </div>
+
         {error && <p className="text-red-600 text-center mb-6 font-medium bg-red-100 p-3 rounded-lg border border-red-200">{error}</p>}
         {success && <p className="text-green-600 text-center mb-6 font-medium bg-green-100 p-3 rounded-lg border border-green-200">{success}</p>}
 
@@ -141,29 +165,26 @@ const PostInternshipPage = () => {
             </select>
           </div>
 
-          {/* Stipend */}
+          {/* Stipend*/}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="stipend">Stipend</label>
             <select id="stipend" name="stipend" value={formData.stipend} onChange={handleChange}
               className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
             >
-              <option value="Unpaid">Unpaid</option>
               <option value="Paid">Paid</option>
-              <option value="Negotiable">Negotiable</option>
-              <option value="₹5,000/month">₹5,000/month</option>
-              <option value="₹10,000/month">₹10,000/month</option>
-              <option value="₹15,000/month">₹15,000/month</option>
-              <option value="₹20,000+/month">₹20,000+/month</option>
+              <option value="Unpaid">Unpaid</option>
+              <option value="Not Disclosed">Not Disclosed</option>
             </select>
           </div>
 
-          {/* Duration */}
+          {/* Duration*/}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="duration">Duration</label>
             <select id="duration" name="duration" value={formData.duration} onChange={handleChange} required
               className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
             >
-              <option value="3 Months">3 Months</option> {/* Minimum 3 Months */}
+              <option value="2 Months">2 Months</option>
+              <option value="3 Months">3 Months</option>
               <option value="4 Months">4 Months</option>
               <option value="5 Months">5 Months</option>
               <option value="6 Months">6 Months</option>
@@ -171,10 +192,29 @@ const PostInternshipPage = () => {
             </select>
           </div>
 
+          {/* PPO (Pre-Placement Offer)*/}
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="ppoOffered">PPO Opportunity?</label>
+            <select id="ppoOffered" name="ppoOffered" value={formData.ppoOffered} onChange={handleChange} required
+              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          
           {/* Application Deadline */}
-          <div className="md:col-span-2">
+          <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="applicationDeadline">Application Deadline</label>
             <input type="date" id="applicationDeadline" name="applicationDeadline" value={formData.applicationDeadline} onChange={handleChange} required
+              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
+            />
+          </div>
+
+          {/* Positions */}
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="positions">Number of Positions</label>
+            <input type="number" id="positions" name="positions" value={formData.positions} onChange={handleChange} required min="1"
               className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
             />
           </div>
@@ -221,14 +261,6 @@ const PostInternshipPage = () => {
             <input type="text" id="perks" name="perks" value={formData.perks} onChange={handleChange}
               className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
               placeholder="e.g., Certificate, LOR, Flexible hours, Stipend"
-            />
-          </div>
-
-          {/* Positions */}
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="positions">Number of Positions</label>
-            <input type="number" id="positions" name="positions" value={formData.positions} onChange={handleChange} required min="1"
-              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
             />
           </div>
 

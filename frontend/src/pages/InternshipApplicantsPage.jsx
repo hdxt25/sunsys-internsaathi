@@ -46,7 +46,7 @@ const InternshipApplicantsPage = () => {
         )
       );
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to update application status.');
+      alert(err.response?.data?.message || 'Failed to update application status.');
     }
   };
 
@@ -83,6 +83,9 @@ const InternshipApplicantsPage = () => {
     );
   }
 
+  // --- FIX: Filter out applications where the applicant has been deleted ---
+  const validApplicants = applicants.filter(app => app.applicant);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 p-6 font-inter animate-fade-in">
       <div className="max-w-7xl mx-auto bg-white p-8 rounded-xl shadow-2xl animate-fade-in">
@@ -90,25 +93,25 @@ const InternshipApplicantsPage = () => {
           Applicants for Internship ID: {internshipId}
         </h2>
         
-        {applicants.length === 0 ? (
+        {validApplicants.length === 0 ? (
           <div className="text-center text-gray-600 text-xl py-10">
             No students have applied for this internship yet.
           </div>
         ) : (
           <div className="space-y-6">
-            {applicants.map((app) => (
+            {validApplicants.map((app) => (
               <div key={app._id} className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-100 transform transition-all duration-300 hover:scale-[1.005]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                   {/* Applicant Details */}
                   <div className="text-left">
                     <h3 className="text-xl font-poppins font-bold text-teal-700 mb-1">
-                      {app.applicant?.name}
+                      {app.applicant.name}
                     </h3>
                     <p className="text-gray-600 text-sm">
-                      <span className="font-semibold">Email:</span> {app.applicant?.email}
+                      <span className="font-semibold">Email:</span> {app.applicant.email}
                     </p>
                     <p className="text-gray-600 text-sm">
-                      <span className="font-semibold">Major:</span> {app.applicant?.major}
+                      <span className="font-semibold">Major:</span> {app.applicant.major}
                     </p>
                     <p className="text-gray-600 text-sm mt-3">
                       <span className="font-semibold">Applied on:</span> {new Date(app.applicationDate).toLocaleDateString()}

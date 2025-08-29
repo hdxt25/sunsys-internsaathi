@@ -34,22 +34,16 @@ const applyForInternship = asyncHandler(async (req, res) => {
     throw new Error('You have already applied for this internship.');
   }
 
-  // Get the college user ID based on the student's collegeName
   const collegeUser = await User.findOne({
     role: 'college',
     collegeName: req.user.collegeName,
   });
 
-  if (!collegeUser) {
-    res.status(404);
-    throw new Error('College not found for this student. Please update your profile with a valid college name.');
-  }
-
   const application = await Application.create({
     internship: internshipId,
     applicant: req.user._id,
     company: internship.company,
-    college: collegeUser._id, // NEW: Save the college's user ID to the application
+    college: collegeUser ? collegeUser._id : null, 
     coverLetter,
     resumeUrl: resumeUrl || req.user.resume,
     status: 'Pending',
@@ -93,7 +87,6 @@ const getCollegeApplications = asyncHandler(async (req, res) => {
     throw new Error('Only college users can view applications for their students.');
   }
   
-  // The query now directly uses the college ID stored on the application
   const applications = await Application.find({ college: req.user._id })
     .populate('internship', 'title companyName location')
     .populate('applicant', 'name email studentId major');
@@ -131,16 +124,29 @@ const updateApplicationStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  const application = await Application.findById(id);
+  // --- FIX: Populate internship details to check the deadline ---
+  const application = await Application.findById(id).populate('internship', 'applicationDeadline');
 
   if (!application) {
     res.status(404);
     throw new Error('Application not found.');
   }
+  
+  if (!application.internship) {
+      res.status(404);
+      throw new Error('The internship associated with this application no longer exists.');
+  }
 
   if (application.company.toString() !== req.user._id.toString()) {
     res.status(403);
     throw new Error('Not authorized to update this application.');
+  }
+
+  // --- NEW: Deadline Enforcement Logic ---
+  const now = new Date();
+  if (now > application.internship.applicationDeadline && status === 'Accepted') {
+      res.status(400);
+      throw new Error('The application deadline has passed. You can no longer accept this application.');
   }
 
   const validStatuses = ['Pending', 'Reviewed', 'Accepted', 'Rejected', 'Withdrawn'];

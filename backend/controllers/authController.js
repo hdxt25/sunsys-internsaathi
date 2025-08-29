@@ -1,6 +1,4 @@
 import User from '../models/User.js';
-// The separate College model is no longer needed for this logic.
-// import College from '../models/collegeModel.js'; 
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcryptjs';
@@ -27,14 +25,16 @@ const getUserResponseData = (user) => {
         ...baseData, 
         companyName: user.companyName, 
         companyDescription: user.companyDescription,
-        companyLogo: user.companyLogo, // 1. Add companyLogo to response
+        companyLogo: user.companyLogo,
+        verificationStatus: user.verificationStatus,
     };
   } else if (user.role === 'college') {
     return { 
         ...baseData, 
         collegeName: user.collegeName, 
         collegeLocation: user.collegeLocation,
-        collegeLogo: user.collegeLogo, // 2. Add collegeLogo to response
+        // --- FIX: Added the missing collegeLogo field ---
+        collegeLogo: user.collegeLogo, 
     };
   } else if (user.role === 'student') {
     return { 
@@ -53,8 +53,7 @@ const getUserResponseData = (user) => {
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    // This function is simplified as logos are now handled on the edit profile page.
-    const { name, email, password, role, companyName, companyDescription, collegeName, collegeLocation, studentId, major } = req.body;
+    const { name, email, password, role, companyName, companyDescription, collegeName, collegeLocation, studentId, major, verificationDocument, companyLogo, collegeLogo } = req.body;
 
     if (!name || !email || !password || !role) {
         res.status(400);
@@ -73,9 +72,13 @@ const registerUser = asyncHandler(async (req, res) => {
     if (role === 'company') {
         userData.companyName = companyName;
         userData.companyDescription = companyDescription;
+        userData.verificationDocument = verificationDocument;
+        userData.verificationStatus = 'pending';
+        if (companyLogo) userData.companyLogo = companyLogo;
     } else if (role === 'college') {
         userData.collegeName = collegeName;
         userData.collegeLocation = collegeLocation;
+        if (collegeLogo) userData.collegeLogo = collegeLogo;
     } else if (role === 'student') {
         userData.studentId = studentId;
         userData.major = major;
@@ -120,20 +123,23 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     if (user.role === 'company') {
       user.companyName = req.body.companyName || user.companyName;
       user.companyDescription = req.body.companyDescription || user.companyDescription;
-      // 3. Save the new companyLogo URL from the request
-      user.companyLogo = req.body.companyLogo; // Use direct assignment to allow clearing the field
+      if (req.body.companyLogo !== undefined) {
+          user.companyLogo = req.body.companyLogo;
+      }
     } else if (user.role === 'college') {
       user.collegeName = req.body.collegeName || user.collegeName;
       user.collegeLocation = req.body.collegeLocation || user.collegeLocation;
-      // 4. Save the new collegeLogo URL from the request
-      user.collegeLogo = req.body.collegeLogo;
+      if (req.body.collegeLogo !== undefined) {
+          user.collegeLogo = req.body.collegeLogo;
+      }
     } else if (user.role === 'student') {
       user.studentId = req.body.studentId || user.studentId;
       user.major = req.body.major || user.major;
       user.resume = req.body.resume;
       user.collegeName = req.body.collegeName || user.collegeName;
-      // 5. Save the new profilePicture URL from the request
-      user.profilePicture = req.body.profilePicture;
+      if (req.body.profilePicture !== undefined) {
+          user.profilePicture = req.body.profilePicture;
+      }
     }
 
     if (req.body.password) {
@@ -142,7 +148,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     
     const updatedUser = await user.save();
     
-    // The getUserResponseData helper will now correctly format the response
     res.status(200).json(getUserResponseData(updatedUser));
 
   } else {

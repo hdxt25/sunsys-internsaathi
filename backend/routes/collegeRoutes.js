@@ -4,7 +4,7 @@ import { protect, authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// @desc    Fetch all colleges with filtering
+// @desc    Fetch all colleges with filtering and availability periods
 // @route   GET /api/colleges
 // @access  Private/Company
 router.get('/', protect, authorizeRoles('company'), async (req, res) => {
@@ -34,20 +34,24 @@ router.get('/', protect, authorizeRoles('company'), async (req, res) => {
     }
 
     // --- THE FIX IS HERE ---
-    // We now fetch the whole user object (minus the password) to avoid errors.
-    const colleges = await User.find(queryConditions).select('-password');
+    // We now populate the 'availabilityPeriods' virtual field to get the dates.
+    const colleges = await User.find(queryConditions)
+      .select('-password')
+      .populate('availabilityPeriods'); // Fetches the related availability data
     
-    // Map the results to the format the frontend expects, with fallbacks for safety.
+    // Map the results to the format the frontend expects.
     const formattedColleges = colleges.map(collegeUser => ({
         _id: collegeUser._id,
         name: collegeUser.collegeName,
         email: collegeUser.email, 
-        collegeLogo: collegeUser.collegeLogo || '', // Use a fallback
+        collegeLogo: collegeUser.collegeLogo || '',
         location: {
-            city: collegeUser.collegeLocation || 'N/A', // Use a fallback
+            city: collegeUser.collegeLocation || 'N/A',
             state: ''
         },
-        domains: [] 
+        domains: [],
+        // --- NEW: Include the availability periods in the response ---
+        availabilityPeriods: collegeUser.availabilityPeriods || [], // Use a fallback
     }));
 
     res.json(formattedColleges);

@@ -6,7 +6,8 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
-      const storedUser = localStorage.getItem('user');
+      // FIX: Changed 'user' to 'userInfo' to match the rest of the app
+      const storedUser = localStorage.getItem('userInfo');
       return storedUser ? JSON.parse(storedUser) : null;
     } catch (error) {
       console.error("Failed to parse user from localStorage", error);
@@ -47,7 +48,8 @@ const AuthProvider = ({ children }) => {
   };
   
   const updateUser = (newUserData) => {
-    localStorage.setItem('user', JSON.stringify(newUserData));
+    // FIX: Changed 'user' to 'userInfo' to keep localStorage consistent
+    localStorage.setItem('userInfo', JSON.stringify(newUserData));
     setUser(newUserData);
   };
 
@@ -67,7 +69,6 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// Moved the useAuth hook outside and wrapped in the provider export
 const useAuth = () => {
   return useContext(AuthContext);
 };

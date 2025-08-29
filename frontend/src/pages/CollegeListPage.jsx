@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import collegeService from '../api/collegeService';
-import { FaEnvelope, FaUniversity } from 'react-icons/fa'; // Import a placeholder icon
+import { FaEnvelope, FaUniversity, FaCalendarAlt } from 'react-icons/fa';
 
 const CollegeListPage = () => {
   const [colleges, setColleges] = useState([]);
@@ -36,7 +36,7 @@ const CollegeListPage = () => {
   };
 
   return (
-    <div className="p-6 font-inter">
+    <div className="p-6 font-inter bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto bg-white p-8 rounded-xl shadow-2xl">
         <h2 className="text-4xl font-poppins font-extrabold text-center mb-4 text-gray-800">
           Find Colleges & Universities
@@ -78,12 +78,11 @@ const CollegeListPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {colleges.map((college) => (
-              <div key={college._id} className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-100 flex flex-col justify-between">
-                <div>
-                  {/* --- NEW LOGO DISPLAY SECTION --- */}
+              <div key={college._id} className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-100 flex flex-col">
+                <div className="flex-grow flex flex-col">
                   <div className="flex items-center mb-4">
                     {college.collegeLogo ? (
-                      <img src={college.collegeLogo} alt={`${college.name} Logo`} className="w-16 h-16 object-contain rounded-md mr-4 border p-1" />
+                      <img src={college.collegeLogo} alt={`${college.name} Logo`} className="w-16 h-16 object-contain rounded-md mr-4 bg-white" />
                     ) : (
                       <div className="w-16 h-16 flex items-center justify-center bg-gray-200 rounded-md mr-4">
                         <FaUniversity className="text-gray-400 text-2xl" />
@@ -94,13 +93,33 @@ const CollegeListPage = () => {
                       <p className="text-gray-700 text-sm">{college.location.city}</p>
                     </div>
                   </div>
+
+                  <a
+                    href={`mailto:${college.email}`}
+                    className="w-full mb-4 bg-teal-700 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out text-center inline-flex items-center justify-center"
+                  >
+                    <FaEnvelope className="mr-2" /> Contact
+                  </a>
+                  
+                  <div className="flex-grow flex flex-col justify-end">
+                    {college.availabilityPeriods && college.availabilityPeriods.length > 0 && (
+                      <div className="mt-auto pt-4 border-t border-gray-200">
+                        <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                          <FaCalendarAlt className="mr-2 text-emerald-600" />
+                          Upcoming Internship Periods
+                        </h4>
+                        <div className="space-y-1">
+                          {college.availabilityPeriods.map(period => (
+                            <div key={period._id} className="text-xs text-gray-600 bg-emerald-50 p-2 rounded-md">
+                              <p className="font-bold text-emerald-800">{period.name}</p>
+                              <p>{new Date(period.startDate).toLocaleDateString()} - {new Date(period.endDate).toLocaleDateString()}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <a
-                  href={`mailto:${college.email}`}
-                  className="w-full mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out text-center inline-flex items-center justify-center"
-                >
-                  <FaEnvelope className="mr-2" /> Contact
-                </a>
               </div>
             ))}
           </div>

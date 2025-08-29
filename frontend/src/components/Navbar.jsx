@@ -10,40 +10,42 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    setIsOpen(false); // Close mobile menu on logout
+    setIsOpen(false);
     navigate('/login');
   };
 
-  // **FIXED LOGIC**: This function determines the correct dashboard path based on user role.
   const getDashboardLink = () => {
     if (!user) return '/login';
     switch (user.role) {
       case 'company':
-        return '/my-internships'; // Or a dedicated company dashboard
+        return '/my-internships';
       case 'student':
-        return '/my-applications'; // Or a dedicated student dashboard
+        return '/my-applications';
       case 'college':
         return '/college-dashboard';
       default:
-        return '/dashboard'; // Fallback generic dashboard
+        return '/dashboard';
     }
   };
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-50 top-0 left-0 animate-fade-in-down">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-21">
-          <div className="flex items-center">
+      <div className="w-full px-2 sm:px-4 lg:px-6">
+        {/* Use relative so we can push logo left, nav center, buttons right */}
+        <div className="relative flex items-center justify-center h-20">
+
+          {/* Logo extreme left */}
+          <div className="absolute left-2 flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <img
-                src="logo.png"
+                src="/logo.png"
                 alt="InternSaathi Logo"
-                className="w-45 h-22 object-contain"
+                className="w-43 h-22 object-contain"
               />
             </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Center navigation links */}
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/internships" className="text-gray-700 hover:text-teal-600 font-medium">
               Explore Internships
@@ -57,45 +59,68 @@ const Navbar = () => {
             <HashLink smooth to="/#contact-us" className="text-gray-700 hover:text-teal-600 font-medium">
               Contact Us
             </HashLink>
+            {user && (
+              <Link to="/profile" className="text-gray-700 hover:text-teal-600 font-medium">
+                Profile
+              </Link>
+            )}
+          </div>
 
+          {/* Dashboard & Auth extreme right */}
+          <div className="absolute right-2 hidden md:flex items-center space-x-4">
             {user ? (
               <>
-                <Link to="/profile" className="text-gray-700 hover:text-teal-600 font-medium">
-                  Profile
-                </Link>
-                <Link to={getDashboardLink()} className="px-4 py-2 bg-emerald-200 text-emerald-800 rounded-lg hover:bg-emerald-300 shadow-md font-bold">
+                <Link
+                  to={getDashboardLink()}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-md "
+                >
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 shadow-md font-bold"
+                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="px-4 py-2 bg-emerald-200 text-emerald-800 rounded-lg hover:bg-emerald-300 shadow-md font-bold">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-md "
+                >
                   Login
                 </Link>
-                <Link to="/register" className="px-4 py-2 bg-teal-200 text-teal-800 rounded-lg hover:bg-teal-300 shadow-md font-bold">
+                <Link
+                  to="/register"
+                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md"
+                >
                   Register
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="-mr-2 flex md:hidden">
+          {/* Mobile menu button (kept on far right inside relative container) */}
+          <div className="absolute right-2 flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
             >
               <span className="sr-only">Open main menu</span>
-              {/* Icon logic */}
-              <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {isOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />}
+              <svg
+                className="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                )}
               </svg>
             </button>
           </div>
@@ -118,8 +143,8 @@ const Navbar = () => {
             <HashLink onClick={() => setIsOpen(false)} smooth to="/#contact-us" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
               Contact Us
             </HashLink>
-            
-            <hr className="my-2"/>
+
+            <hr className="my-2" />
 
             {user ? (
               <>

@@ -77,12 +77,15 @@ const internshipSchema = mongoose.Schema(
       required: true,
       default: 1,
     },
-    applicants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
+    applicants: { // --- FIX IS HERE ---
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      ],
+      default: [], // Ensures the field is always an array
+    },
   },
   {
     timestamps: true,

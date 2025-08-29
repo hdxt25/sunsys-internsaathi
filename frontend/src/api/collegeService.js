@@ -4,8 +4,9 @@ const API_URL = 'http://localhost:3000/api/colleges/';
 
 // Helper function to get the user token from local storage
 const getToken = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  return user ? user.token : null;
+  // FIX: Changed 'user' to 'userInfo' to match the rest of the application
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  return userInfo ? userInfo.token : null;
 };
 
 /**

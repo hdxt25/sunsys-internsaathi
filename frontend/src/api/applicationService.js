@@ -4,8 +4,9 @@ const API_URL = 'http://localhost:3000/api/applications/';
 
 // Helper function to get the user token from local storage
 const getToken = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  return user ? user.token : null;
+  // FIX: Changed 'user' to 'userInfo' to match the rest of the application
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  return userInfo ? userInfo.token : null;
 };
 
 // Apply for an internship
@@ -57,7 +58,7 @@ const getCollegeApplications = async () => {
   return response.data;
 };
 
-// Get applicants for a single internship (newly added function)
+// Get applicants for a single internship
 const getInternshipApplicants = async (internshipId) => {
   const token = getToken();
   const config = {
@@ -87,7 +88,7 @@ const applicationService = {
   getStudentApplications,
   getCompanyApplications,
   getCollegeApplications,
-  getInternshipApplicants, // Ensure this function is exported
+  getInternshipApplicants,
   updateApplicationStatus,
 };
 

@@ -1,26 +1,26 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import Navbar from '../components/Navbar';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import Navbar from "../components/Navbar";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleRegisterClick = () => {
-    navigate('/register');
+    navigate("/register");
   };
 
   const handleExploreInternshipsClick = () => {
-    navigate('/internships');
+    navigate("/internships");
   };
 
   const handleDashboardClick = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -31,10 +31,15 @@ const LandingPage = () => {
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 flex items-center justify-center text-center px-4">
         <div className="max-w-4xl mx-auto animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-poppins font-extrabold text-gray-800 leading-tight mb-6">
-            <span className="inline-block">Your Gateway to</span> <br /> <span className="text-teal-600 inline-block">Dream Internships</span>
+            <span className="inline-block">Your Gateway to</span> <br />{" "}
+            <span className="text-teal-600 inline-block">
+              Dream Internships
+            </span>
           </h1>
           <p className="text-lg md:text-xl text-gray-700 mb-10 max-w-3xl mx-auto">
-            Internsaathi connects ambitious students with top companies, offering a seamless platform for internship discovery, application, and talent acquisition.
+            Internsaathi connects ambitious students with top companies,
+            offering a seamless platform for internship discovery, application,
+            and talent acquisition.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             {user ? (
@@ -62,7 +67,7 @@ const LandingPage = () => {
             )}
             <button
               onClick={handleExploreInternshipsClick}
-              className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg text-lg"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg text-lg"
             >
               Explore Internships
             </button>
@@ -71,135 +76,261 @@ const LandingPage = () => {
       </section>
 
       {/* About Us Section */}
-      <section id="about-us" className="pt-16 -mt-16 py-16 md:py-24 bg-white px-4">
+      <section
+        id="about-us"
+        className="pt-16 -mt-16 py-16 md:py-24 bg-white px-4"
+      >
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h2 className="text-4xl font-poppins font-bold text-gray-700 mb-6">About Internsaathi</h2>
-          <p className="text-lg text-gray-700 mb-4">
-            Internsaathi was founded with a mission to bridge the gap between aspiring talent and leading organizations. We believe that every student deserves a chance to gain real-world experience,<br/>and every company deserves to find the perfect fit for their teams.
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-700 mb-6">
+            Your Bridge from Learning to Earning
+          </h2>
+          <p className="text-base md:text-lg text-gray-700 mb-4">
+            <a
+              href="https://www.internsaathi.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-600 hover:underline font-bold"
+            >
+              InternSaathi
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://www.naukrisaathi.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-600 hover:underline font-bold"
+            >
+              NaukriSaathi
+            </a>
+            , powered by <strong>SunsysTechsol Pvt. Ltd.</strong>, together
+            create a <strong>zero-cost career ecosystem</strong> designed to
+            guide students and young professionals seamlessly from internships
+            to full-time employment.
           </p>
-          <p className="text-lg text-gray-700">
-            Our platform provides a comprehensive solution for internship seekers, companies, and colleges, streamlining the entire process from posting to placement.
+          <p className="text-base md:text-lg text-gray-700 mb-4">
+            🔹 <strong>InternSaathi</strong> (established in 2025) connects
+            learners with impactful internships, providing real-world exposure
+            and often paving the way to{" "}
+            <strong>Pre-Placement Offers (PPOs)</strong>.
+          </p>
+          <p className="text-base md:text-lg text-gray-700 mb-4">
+            🔹 <strong>NaukriSaathi</strong> continues the journey by offering
+            verified job opportunities across diverse industries, ensuring a
+            smooth transition from internships to lasting careers.
+          </p>
+          <p className="text-base md:text-lg text-gray-700 mb-4">
+            This dual-platform model ensures that whether you are a college
+            shaping future talent, a student eager to grow, or a company
+            building strong pipelines — the process is simple, impactful, and
+            entirely free.
+          </p>
+          <p className="text-base md:text-lg text-gray-700 mb-4">
+            Guided by a social mission, both platforms champion{" "}
+            <strong>women empowerment</strong>, <strong>inclusivity</strong>,
+            and <strong>equal opportunity</strong> — making opportunities
+            limitless and talent truly accessible.
+          </p>
+          <p className="text-base md:text-lg text-gray-700">
+            The initiatives are led by a passionate team: Ms. Dilseerat Kaur
+            (CGC), Mr. Gautam Tanwar (IIT), <br/>Mr. Sparsh Sharma (UU), and Mr. Abhirash Garg (ABES).
           </p>
         </div>
       </section>
 
       {/* Features Section */}
-<section id="features" className="pt-16 -mt-16 py-16 md:py-24 bg-gradient-to-r from-emerald-50 to-teal-50 px-4">
-  <div className="max-w-5xl mx-auto animate-fade-in">
-    <h2 className="text-4xl font-poppins font-bold text-center text-gray-700 mb-12">Key Features</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section
+        id="features"
+        className="pt-16 -mt-16 py-16 md:py-24 bg-gradient-to-r from-emerald-50 to-teal-50 px-4"
+      >
+        <div className="max-w-5xl mx-auto animate-fade-in">
+          <h2 className="text-4xl font-poppins font-bold text-center text-gray-700 mb-12">
+            Key Features
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-white p-8 rounded-xl shadow-md text-center transform transition-all duration-300 hover:scale-105">
+              <svg
+                className="w-16 h-16 mx-auto mb-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#10B981" />
+                    <stop offset="100%" stopColor="#14B8A6" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c.071 1.09.28 2.158.625 3.176M12 21.056c-1.09-.071-2.158-.28-3.176-.625M21.056 12c-.071-1.09-.28-2.158-.625-3.176"
+                  stroke="url(#grad1)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <h3 className="text-xl font-poppins font-semibold text-gray-700 mb-3">
+                Vast Internship
+                <br />
+                Database
+              </h3>
+              <p className="text-gray-700 text-center">
+                Discover countless internships in every field and location —
+                with new ones added daily.
+              </p>
+            </div>
 
-      {/* Feature 1 */}
-      <div className="bg-white p-8 rounded-xl shadow-md text-center transform transition-all duration-300 hover:scale-105">
-        <svg className="w-16 h-16 mx-auto mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#10B981" />
-              <stop offset="100%" stopColor="#14B8A6" />
-            </linearGradient>
-          </defs>
-          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c.071 1.09.28 2.158.625 3.176M12 21.056c-1.09-.071-2.158-.28-3.176-.625M21.056 12c-.071-1.09-.28-2.158-.625-3.176" stroke="url(#grad1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        <h3 className="text-xl font-poppins font-semibold text-gray-700 mb-3">
-          Vast Internship<br />Database
-        </h3>
-        <p className="text-gray-700 text-center">Discover countless internships
-in every field and location —
-with new ones added daily.</p>
-      </div>
+            {/* Feature 2 */}
+            <div className="bg-white p-8 rounded-xl shadow-md text-center transform transition-all duration-300 hover:scale-105">
+              <svg
+                className="w-16 h-16 mx-auto mb-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#10B981" />
+                    <stop offset="100%" stopColor="#14B8A6" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  stroke="url(#grad2)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <h3 className="text-xl font-poppins font-semibold text-gray-700 mb-3">
+                Easy Application
+                <br />
+                Process
+              </h3>
+              <p className="text-gray-700 text-center">
+                Apply to your desired internships with a few simple clicks and a
+                personalized cover letter.
+              </p>
+            </div>
 
-      {/* Feature 2 */}
-      <div className="bg-white p-8 rounded-xl shadow-md text-center transform transition-all duration-300 hover:scale-105">
-        <svg className="w-16 h-16 mx-auto mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#10B981" />
-              <stop offset="100%" stopColor="#14B8A6" />
-            </linearGradient>
-          </defs>
-          <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke="url(#grad2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        <h3 className="text-xl font-poppins font-semibold text-gray-700 mb-3">
-          Easy Application<br />Process
-        </h3>
-        <p className="text-gray-700 text-center">Apply to your desired internships with a few simple clicks and a personalized cover letter.</p>
-      </div>
+            {/* Feature 3 */}
+            <div className="bg-white p-8 rounded-xl shadow-md text-center transform transition-all duration-300 hover:scale-105">
+              <svg
+                className="w-16 h-16 mx-auto mb-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="grad3" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#10B981" />
+                    <stop offset="100%" stopColor="#14B8A6" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.205 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.795 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.795 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.205 18 16.5 18s-3.332.477-4.5 1.253"
+                  stroke="url(#grad3)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <h3 className="text-xl font-poppins font-semibold text-gray-600 mb-3">
+                Company & College
+                <br />
+                Dashboards
+              </h3>
+              <p className="text-gray-700 text-center">
+                Smart dashboards for companies to post and colleges to monitor
+                every student's placement journey.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Feature 3 */}
-      <div className="bg-white p-8 rounded-xl shadow-md text-center transform transition-all duration-300 hover:scale-105">
-        <svg className="w-16 h-16 mx-auto mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="grad3" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#10B981" />
-              <stop offset="100%" stopColor="#14B8A6" />
-            </linearGradient>
-          </defs>
-          <path d="M12 6.253v13m0-13C10.832 5.477 9.205 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.795 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.795 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.205 18 16.5 18s-3.332.477-4.5 1.253" stroke="url(#grad3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        <h3 className="text-xl font-poppins font-semibold text-gray-600 mb-3">
-          Company & College<br />Dashboards
-        </h3>
-        <p className="text-gray-700 text-center">Smart dashboards for companies to post
-and colleges to monitor every
-student's placement journey.</p>
-      </div>
-
-    </div>
+      {/* Call to Action for Companies/Colleges */}
+<section className="py-16 md:py-24 bg-white px-4">
+  <div className="max-w-4xl mx-auto text-center animate-fade-in">
+    <h2 className="text-4xl font-poppins font-bold text-gray-700 mb-6">
+      Empower Your Organization
+    </h2>
+    <p className="text-lg text-gray-700 mb-8">
+      Be part of a growing ecosystem where companies and colleges connect with ambitious students for internships and opportunities
+    </p>
+    <button
+      onClick={handleRegisterClick}
+      className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg text-lg"
+    >
+      Register Your Organization
+    </button>
   </div>
 </section>
 
 
-      {/* Call to Action for Companies/Colleges */}
-      <section className="py-16 md:py-24 bg-white px-4">
-        <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h2 className="text-4xl font-poppins font-bold text-gray-700 mb-6">Are You a Company or College?</h2>
-          <p className="text-lg text-gray-700 mb-8">
-            Join Internsaathi to connect with bright, aspiring talent and streamline your hiring process.
+      {/* --- CONTACT US SECTION--- */}
+      <section
+        id="contact-us"
+        className="py-12 bg-gradient-to-br from-emerald-50 to-teal-100 px-4 border-t border-gray-100"
+      >
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="font-poppins font-semibold text-gray-700 mb-2">
+            Need Help?
+          </h3>
+          <p className="text-gray-600 mb-4 text-sm">
+            For any questions or support, please reach out to our team.
           </p>
-          <button
-            onClick={handleRegisterClick}
-            className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg text-lg"
+          <a
+            href="mailto:admin@internsaathi.com?cc=info@internsaathi.com "
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-lg transition-all duration-300 ease-in-out text-sm shadow-md"
           >
-            Register Your Organization
-          </button>
+            Email Us
+          </a>
         </div>
       </section>
 
-      {/* Contact Us Section */}
-      <section id="contact-us" className="pt-16 -mt-16 py-16 md:py-24 bg-gradient-to-br from-emerald-50 to-teal-100 px-4">
-        <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h2 className="text-4xl font-poppins font-bold text-gray-700 mb-6">Contact Us</h2>
-          <p className="text-lg text-gray-700 mb-8">
-            Have questions or need support? Feel free to reach out to us!
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="mailto:support@Internsaathi.com"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg text-lg"
-            >
-              Email Us
-            </a>
-            <a
-              href="tel:+911234567890"
-              className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg text-lg"
-            >
-              Call Us
-            </a>
-          </div>
+      {/* Footer Section */}
+<footer className="bg-white text-gray-800 py-8 text-center border-t border-gray-200">
+  <div className="max-w-7xl mx-auto px-4">
+    
+    {/* --- NEW: Disclaimer Section --- */}
+    <div className="mb-8 p-6 bg-white rounded-lg">
+        <h4 className="font-bold text-lg text-gray-700 mb-4">⚖️ Disclaimer – InternSaathi</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 text-xs text-gray-700">
+            <p>
+                <strong>📌 Platform Role:</strong> A connecting platform, not an employer.
+            </p>
+            <p>
+                <strong>👥 User Responsibility:</strong> Users must verify all details.
+            </p>
+            <p>
+                <strong>📊 No Guarantee:</strong> We do not guarantee any outcomes.
+            </p>
+            <p>
+                <strong>🛡️ Liability:</strong> Not responsible for contracts or disputes.
+            </p>
+            <p>
+                <strong>🔒 Safety First:</strong> Share personal details with caution.
+            </p>
+            <p>
+                <strong>🚫 No Misuse:</strong> Fraud may lead to account suspension.
+            </p>
         </div>
-      </section>
+    </div>
 
-      {/* Footer 
-      <footer className="bg-gray-800 text-white py-8 text-center">
-        <div className="max-w-7xl mx-auto px-4">
-          <p>&copy; {new Date().getFullYear()} Internsaathi. All rights reserved.</p>
-          <div className="flex justify-center space-x-4 mt-4">
-            <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">Privacy Policy</a>
-            <a href="#" className="text-gray-300 hover:text-white transition-colors duration-200">Terms of Service</a>
-          </div>
-        </div>
-      </footer>
-      */}
+    <p className="text-gray-600">
+      &copy; {new Date().getFullYear()} Internsaathi. All rights reserved.
+    </p>
+     <div className="flex justify-center items-center space-x-2 mt-4">
+      <span className="text-gray-600">Powered by</span>
+      {/* --- UPDATED: Made the logo a clickable link --- */}
+      <a href="https://www.sunsysglobal.com/" target="_blank" rel="noopener noreferrer">
+        <img src="/logo2.jpg" alt="Sunsys Logo" className="h-22 w-25" />
+      </a>
+    </div>
+  </div>
+</footer>
+
     </div>
   );
 };

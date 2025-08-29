@@ -12,9 +12,34 @@ const ApplyInternshipPage = () => {
   const [internship, setInternship] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [applicationSuccess, setApplicationSuccess] = useState('');
+
+  // Form state
   const [coverLetter, setCoverLetter] = useState('');
   const [resumeUrl, setResumeUrl] = useState(user?.resume || '');
-  const [applicationSuccess, setApplicationSuccess] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState(user?.linkedin || '');
+  const [githubUrl, setGithubUrl] = useState(user?.github || '');
+
+  // --- NEW: Helper function to calculate time since posting ---
+  const timeAgo = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const seconds = Math.floor((new Date() - date) / 1000);
+    let interval = seconds / 86400; // days
+    if (interval > 1) {
+      return Math.floor(interval) + " days ago";
+    }
+    interval = seconds / 3600; // hours
+    if (interval > 1) {
+      return Math.floor(interval) + " hours ago";
+    }
+    interval = seconds / 60; // minutes
+    if (interval > 1) {
+      return Math.floor(interval) + " minutes ago";
+    }
+    return "Just now";
+  };
+
 
   useEffect(() => {
     if (!user || user.role !== 'student') {
@@ -50,10 +75,11 @@ const ApplyInternshipPage = () => {
     }
 
     try {
-      // Pass all required internship details to the application service call
       const applicationData = {
         coverLetter,
         resumeUrl,
+        linkedinUrl,
+        githubUrl,
         internshipDomain: internship.internshipDomain,
         workType: internship.workType,
         companyName: internship.companyName,
@@ -62,7 +88,7 @@ const ApplyInternshipPage = () => {
       await applicationService.applyForInternship(internshipId, applicationData);
       setApplicationSuccess('Your application has been submitted successfully!');
       setCoverLetter('');
-      navigate('/my-applications');
+      setTimeout(() => navigate('/my-applications'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to submit application.');
     }
@@ -100,6 +126,12 @@ const ApplyInternshipPage = () => {
         <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-100">
           <h3 className="text-2xl font-bold text-teal-700 mb-2">{internship.title}</h3>
           <p className="text-gray-800 font-semibold mb-1">{internship.companyName}</p>
+          {/* --- NEW: Display how long ago it was posted --- */}
+          {internship.createdAt && (
+            <p className="text-gray-500 text-xs mb-2">
+              Posted {timeAgo(internship.createdAt)}
+            </p>
+          )}
           <p className="text-gray-600 text-sm mb-2">{internship.internshipDomain}</p>
           <p className="text-gray-700 text-sm mb-1">
             <span className="font-semibold">Location:</span> {internship.location} ({internship.workType})
@@ -121,9 +153,15 @@ const ApplyInternshipPage = () => {
               ))}
             </div>
           </div>
-          <p className="text-gray-600 text-sm">
-            Application Deadline: {new Date(internship.applicationDeadline).toLocaleDateString()}
-          </p>
+          {/* --- NEW: Display Application Start and End Dates --- */}
+          <div className="text-gray-600 text-sm mt-4 bg-teal-50 p-3 rounded-md border border-teal-100">
+            <p className="font-semibold">
+              Application Period:
+            </p>
+            <p>
+              {internship.applicationStartDate ? new Date(internship.applicationStartDate).toLocaleDateString() : 'ASAP'} - {new Date(internship.applicationDeadline).toLocaleDateString()}
+            </p>
+          </div>
         </div>
 
         <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">Your Application</h3>
@@ -147,9 +185,42 @@ const ApplyInternshipPage = () => {
             ></textarea>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="linkedinUrl">
+                LinkedIn Profile URL (Optional)
+              </label>
+              <input
+                type="url"
+                id="linkedinUrl"
+                name="linkedinUrl"
+                className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
+                value={linkedinUrl}
+                onChange={(e) => setLinkedinUrl(e.target.value)}
+                placeholder="https://linkedin.com/in/yourprofile"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="githubUrl">
+                GitHub Profile URL (Optional)
+              </label>
+              <input
+                type="url"
+                id="githubUrl"
+                name="githubUrl"
+                className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-200"
+                value={githubUrl}
+                onChange={(e) => setGithubUrl(e.target.value)}
+                placeholder="https://github.com/yourusername"
+              />
+            </div>
+          </div>
+
+
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="resumeUrl">
-              Resume URL (Optional, will use profile resume if empty)
+              Resume URL (Optional, uses profile resume if empty)
             </label>
             <input
               type="url"

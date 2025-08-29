@@ -13,7 +13,7 @@ const MyApplicationsPage = () => {
 
   // Redirect if not a student user
   useEffect(() => {
-    if (!user || user.role !== 'student') {
+    if (user && user.role !== 'student') {
       navigate('/login'); // Redirect to login or a "not authorized" page
     }
   }, [user, navigate]);
@@ -50,6 +50,9 @@ const MyApplicationsPage = () => {
       </div>
     );
   }
+  
+  // Filter out applications where the internship or company has been deleted
+  const validApplications = applications.filter(app => app.internship && app.company);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 p-6 font-raleway animate-fade-in">
@@ -58,7 +61,7 @@ const MyApplicationsPage = () => {
           My Applications
         </h2>
 
-        {applications.length === 0 ? (
+        {validApplications.length === 0 ? (
           <div className="text-center text-gray-600 text-xl py-10">
             You haven't applied for any internships yet.
             <br />
@@ -71,8 +74,9 @@ const MyApplicationsPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {applications.map((app) => (
-              <div key={app._id} className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-100 transform transition-all duration-300 hover:scale-[1.005] flex flex-col sm:flex-row justify-between items-start sm:items-center">
+            {validApplications.map((app) => (
+              // --- FIX: Removed the 'border' class ---
+              <div key={app._id} className="bg-gray-50 p-6 rounded-xl shadow-md transform transition-all duration-300 hover:scale-[1.005] flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <div className="text-left mb-4 sm:mb-0">
                   <h3 className="text-xl font-bold text-teal-700 mb-1">{app.internship.title}</h3>
                   <p className="text-gray-800 font-semibold mb-1">{app.company.companyName || app.company.name}</p>
@@ -91,13 +95,6 @@ const MyApplicationsPage = () => {
                   >
                     {app.status}
                   </span>
-                  {/* Optionally add a "View Details" button for the application */}
-                  {/* <button
-                    onClick={() => navigate(`/application/${app._id}`)}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1.5 px-3 rounded-lg text-sm transition duration-200"
-                  >
-                    View Details
-                  </button> */}
                 </div>
               </div>
             ))}

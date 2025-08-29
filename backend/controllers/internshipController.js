@@ -83,15 +83,16 @@ const getInternships = asyncHandler(async (req, res) => {
       const numericValue = parseInt(numericStipendMatch[0].replace(/,/g, ''), 10);
       if (!isNaN(numericValue)) {
         filter.stipend = { $gte: numericValue };
-        console.log(`Backend: Stipend filter set to numeric $gte: ${numericValue}`);
       } else {
         filter.stipend = { $regex: stipendValue, $options: 'i' };
-        console.log(`Backend: Stipend filter set to regex: ${stipendValue}`);
       }
     } else {
         filter.stipend = { $regex: stipendValue, $options: 'i' };
-        console.log(`Backend: Stipend filter set to regex (no numeric part): ${stipendValue}`);
     }
+  }
+
+  if (req.query.location) {
+    filter.location = { $regex: req.query.location, $options: 'i' };
   }
 
   if (req.query.duration) {
@@ -106,8 +107,15 @@ const getInternships = asyncHandler(async (req, res) => {
     filter.workType = { $regex: req.query.workType, $options: 'i' };
   }
 
-  if (req.query.domain) {
-    filter.internshipDomain = { $regex: req.query.domain, $options: 'i' };
+  // --- NEW: Logic to handle the postedDate filter ---
+  if (req.query.postedDate) {
+    const daysAgo = parseInt(req.query.postedDate, 10);
+    if (!isNaN(daysAgo)) {
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      // Assuming your Internship model has a 'createdAt' timestamp from Mongoose
+      filter.createdAt = { $gte: date };
+    }
   }
 
   const query = { ...keyword, ...filter };
@@ -116,18 +124,16 @@ const getInternships = asyncHandler(async (req, res) => {
   const count = await Internship.countDocuments(query);
   console.log('Backend: Count of matching internships:', count);
 
-  // --- FETCH AND POPULATE LOGO (THE FIX) ---
   const internshipsFromDB = await Internship.find(query)
-    // 1. Populate the 'company' field and select only the 'companyLogo' from the User model
     .populate('company', 'companyLogo')
+    .sort({ createdAt: -1 }) // Sort by newest first for relevance
     .limit(pageSize)
     .skip(pageSize * (page - 1))
-    .lean(); // Use .lean() for better performance and to allow modification
+    .lean();
 
-  // 2. Map the results to add the companyLogo to the top level of each internship object
   const internships = internshipsFromDB.map(internship => ({
     ...internship,
-    companyLogo: internship.company?.companyLogo || '', // Add the logo URL, with a fallback
+    companyLogo: internship.company?.companyLogo || '',
   }));
 
   res.json({ internships, page, pages: Math.ceil(count / pageSize) });
@@ -139,11 +145,9 @@ const getInternships = asyncHandler(async (req, res) => {
 // @access  Public
 const getInternshipById = asyncHandler(async (req, res) => {
   const internship = await Internship.findById(req.params.id)
-    // Also populate the logo here for the details page
     .populate('company', 'name email companyName companyDescription companyLogo');
 
   if (internship) {
-    // Convert to a plain object to add the logo property for consistency
     const populatedInternship = internship.toObject();
     populatedInternship.companyLogo = internship.company?.companyLogo || '';
     res.status(200).json(populatedInternship);
