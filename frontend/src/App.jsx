@@ -24,6 +24,8 @@ import CompanyListPage from './pages/CompanyListPage';
 import ManageAvailabilityPage from './pages/ManageAvailabilityPage'; 
 // --- NEW: Import the AdminVerificationPage ---
 import AdminVerificationPage from './pages/AdminVerificationPage';
+import AboutUsPage from './pages/AboutUsPage';
+import FeaturesPage from './pages/FeaturesPage';
 
 function App() {
   return (
@@ -34,6 +36,9 @@ function App() {
           <main className="pt-16 pb-10">
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/about-us" element={<AboutUsPage />} />
+              <Route path="/features-page" element={<FeaturesPage />} />
+              
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route

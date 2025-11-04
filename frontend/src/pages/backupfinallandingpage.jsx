@@ -31,8 +31,6 @@ const campusAmbassadors = [
     // Placeholder photos for Campus Ambassadors (Circular, slightly smaller)
    // "logos/1.jpg",
 "logos/2.jpg",
-"logos/3.jpg",
-
 
    // "https://placehold.co/120x120/E8D1FF/333333?text=Amb+B",
    // "https://placehold.co/120x120/D1FFF4/333333?text=Amb+C",
@@ -157,7 +155,7 @@ const LandingPage = () => {
           src={logo}
           alt={`Company ${index}`}
           // Full color and vibrancy maintained
-className="h-16 md:h-18 w-auto object-contain opacity-100 transition-opacity duration-300"
+className="h-14 md:h-16 w-auto object-contain opacity-100 transition-opacity duration-300"
 
           // Added robust onError fallback to prevent broken images if local paths don't work
           onError={(e) => {
@@ -208,7 +206,7 @@ className="h-16 md:h-18 w-auto object-contain opacity-100 transition-opacity dur
               items={companyLogos} 
               itemRenderer={renderCompanyLogo} 
               speed={2} // Faster scroll
-              className="h-20" 
+              className="h-14" 
           />
       </div>
 
@@ -250,111 +248,80 @@ className="h-16 md:h-18 w-auto object-contain opacity-100 transition-opacity dur
 </section>
 */}
 
-
 {/* 3. TESTIMONIALS SECTION */}
-<section className="py-10 bg-gradient-to-r from-orange-50 to-orange-100 border-t border-gray-200">
+<section className="py-10 bg-gradient-to-r from-emerald-50 to-teal-100 border-t border-gray-200">
   <h3 className="text-2xl md:text-3xl font-poppins font-bold text-center text-gray-800 mb-8">
     Voices That Inspire
   </h3>
 
-  <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6">
-    {[
-      {
-        src: "https://www.youtube.com/embed/JpCDJmvy81c?controls=1&modestbranding=1&showinfo=0&rel=0",
-        title: "Guiding the Future",
-        desc: "A mentor’s view on shaping young talent into future leaders."
-      },
-      {
-        src: "https://www.youtube.com/embed/sHi2MgKtr7U?controls=1&modestbranding=1&showinfo=0&rel=0",
-        title: "IIM Student Experience",
-        desc: "An IIM student shares how real internships built real confidence."
-      },
-      {
-        src: "https://www.youtube.com/embed/R-Ha7OwBJkk?controls=1&modestbranding=1&showinfo=0&rel=0",
-        title: "Career Growth",
-        desc: "When opportunity meets mentorship, transformation begins."
-      },
-      {
-        src: "https://www.youtube.com/embed/31Ip3STqkeo?controls=1&modestbranding=1&showinfo=0&rel=0",
-        title: "Journey Beyond Limits",
-        desc: "Dream big. Start small. Learn and grow with the right support."
-      }
-    ].map((video, i) => (
-      <div
-        key={i}
-        className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-      >
-        {/* Video Embed (Smaller Aspect Ratio) */}
-        <div className="aspect-[4/3] overflow-hidden">
-          <iframe
-            width="100%"
-            height="100%"
-            src={video.src}
-            title={video.title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="rounded-t-2xl scale-105 hover:scale-100 transition-transform duration-500"
-          ></iframe>
-        </div>
-
-        {/* Text Content */}
-        <div className="p-4 text-center">
-          <h4 className="font-semibold text-gray-900 text-base mb-1">{video.title}</h4>
-          <p className="text-sm text-gray-600 leading-snug">{video.desc}</p>
-        </div>
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+    {/* Testimonial 1 - Two Friends */}
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+      <div className="aspect-video">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/31Ip3STqkeo"
+          title="Journey Beyond Limits"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="rounded-t-2xl"
+        ></iframe>
       </div>
-    ))}
-  </div>
-</section>
-
-
-{/* ABOUT US SECTION - Aesthetic and Engaging
-<section className="relative py-14 bg-gradient-to-br from-teal-50 via-emerald-100 to-white text-center overflow-hidden">
-  {/* Decorative gradient circles for depth 
-  <div className="absolute top-0 left-0 w-48 h-48 bg-emerald-200 rounded-full blur-3xl opacity-30"></div>
-  <div className="absolute bottom-0 right-0 w-56 h-56 bg-teal-300 rounded-full blur-3xl opacity-30"></div>
-
-  <div className="relative max-w-6xl mx-auto px-6">
-   
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {/* Card 1 
-      <div className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-teal-500">
-        <div className="text-4xl mb-3">🎯</div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Mission</h3>
-        <p className="text-gray-600 text-sm leading-snug">
-          To bridge the gap between classroom learning and professional experience by connecting students to internships that matter.
-        </p>
-      </div>
-
-      {/* Card 2 
-      <div className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-emerald-500">
-        <div className="text-4xl mb-3">🚀</div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Vision</h3>
-        <p className="text-gray-600 text-sm leading-snug">
-          To create an inclusive ecosystem where every student can explore, learn, and grow through hands-on industry experience.
-        </p>
-      </div>
-
-      {/* Card 3
-      <div className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-cyan-500">
-        <div className="text-4xl mb-3">🤝</div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Approach</h3>
-        <p className="text-gray-600 text-sm leading-snug">
-          We collaborate with colleges and professionals to provide transparent, verified, and impactful internship opportunities.
+      <div className="p-4 text-center">
+        <h4 className="font-semibold text-gray-800">Journey Beyond Limits</h4>
+        <p className="text-sm text-gray-600 mt-1">
+          Every big dream begins with small steps. Hear how ambition, guidance, and the right platform can change everything.
         </p>
       </div>
     </div>
 
-    {/* Small Closing Tagline 
-    <p className="mt-10 text-sm text-gray-500 italic">
-      “Shaping careers, one internship at a time.”
-    </p>
+    {/* Testimonial 2 - HR Explains */}
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+      <div className="aspect-video">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/R-Ha7OwBJkk"
+          title="Shaping Future Careers"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="rounded-t-2xl"
+        ></iframe>
+      </div>
+      <div className="p-4 text-center">
+        <h4 className="font-semibold text-gray-800">Shaping Future Careers</h4>
+        <p className="text-sm text-gray-600 mt-1">
+          When opportunity meets mentorship, transformation happens. Discover a fresh outlook on student career growth.
+        </p>
+      </div>
+    </div>
+
+    {/* Testimonial 3 - Mentor Leader */}
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+      <div className="aspect-video">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/JpCDJmvy81c"
+          title="Guiding the Future"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="rounded-t-2xl"
+        ></iframe>
+      </div>
+      <div className="p-4 text-center">
+        <h4 className="font-semibold text-gray-800">Guiding the Future</h4>
+        <p className="text-sm text-gray-600 mt-1">
+          A mentor’s perspective on building meaningful pathways from learning to leadership, and from internships to impact.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
-
-
 
 
 
@@ -371,11 +338,11 @@ className="h-16 md:h-18 w-auto object-contain opacity-100 transition-opacity dur
           />
       </div>
 
-      {/* Footer Section */} 
+      {/* Footer Section (Kept the same as requested) */} 
       <footer className="bg-white text-gray-800 py-4 text-center "> 
         <div className="max-w-7xl mx-auto px-4"> 
           
-          {/* Powered by Section */} 
+          {/* Powered by Section - Logo path updated */} 
           <div className="flex flex-col md:flex-row justify-center items-center gap-2 mt-2"> 
             <span className="text-gray-600 text-sm">Powered by</span> 
             <a 
@@ -390,7 +357,7 @@ className="h-16 md:h-18 w-auto object-contain opacity-100 transition-opacity dur
                     onError={(e) => { e.target.src = "https://placehold.co/60x48/10B981/ffffff?text=Sunsys"; }}
                 /> 
             </a> 
-            {/* Sunsys LinkedIn (size 18)  */} 
+            {/* Sunsys LinkedIn (size 18) */} 
             <a 
               href="https://www.linkedin.com/company/sunsystechsol-pvt-ltd/" 
               target="_blank" 
@@ -401,7 +368,7 @@ className="h-16 md:h-18 w-auto object-contain opacity-100 transition-opacity dur
             </a> 
           </div> 
 
-          {/* Social Media Links*/} 
+          {/* Social Media Links - Size 20 confirmed */} 
           <div className="mt-3"> 
             <p className="text-gray-600 font-medium text-sm mb-1">Follow us on</p> 
             <div className="flex justify-center items-center space-x-4"> 

@@ -40,3 +40,15 @@
 .read-the-docs {
   color: #888;
 }
+
+.carousel-logo {
+  width: 4rem; /* 16px x 4 = 64px */
+  height: 4rem;
+  object-fit: contain;
+  margin: 0 auto;
+  transition: transform 0.3s;
+}
+
+.carousel-logo:hover {
+  transform: scale(1.05);
+}
