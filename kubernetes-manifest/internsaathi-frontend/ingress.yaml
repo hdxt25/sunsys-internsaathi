@@ -25,3 +25,10 @@ spec:
                 name: internsaathi-frontend
                 port:
                   number: 80
+          - path: "/api"
+            pathType: Prefix
+            backend:
+              service:
+                name: internsaathi-backend
+                port:
+                  number: 3000
