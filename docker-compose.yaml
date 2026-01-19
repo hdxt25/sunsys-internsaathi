@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  backend:
+    container_name: internsaathi-backend
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+
+  frontend:
+    container_name: internsaathi-frontend
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env
+    restart: unless-stopped

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: internsaathi-backend
+  namespace: internsaathi
+  labels:
+    
+    app.kubernetes.io/instance: internsaathi
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/name: internsaathi-backend
+    app.kubernetes.io/version: "1.12.0"
+    app.kubernetes.io/part-of: internsaathi
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      
+      app.kubernetes.io/name: internsaathi-backend
+  template:
+    metadata:
+      labels:
+        
+        app.kubernetes.io/instance: internsaathi
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/name: internsaathi-backend
+    spec:
+      serviceAccountName: internsaathi
+      containers:
+        - name: internsaathi-backend
+          image: 'hdxt25/internsaathi-backend:v1'
+          imagePullPolicy: IfNotPresent
+          ports:
+            
+            - containerPort: 3000
+              name: service
+          env:
+            - name: JWT_SECRET
+              value: 'Internsaathi123'
+            - name: CLOUDINARY_CLOUD_NAME
+              value: 'dtiinogfu'
+            - name: CLOUDINARY_API_KEY
+              value: "562733872976854"
+            - name: CLOUDINARY_API_SECRET
+              value: "7SdxuAtWVKYXcmXu2I5zd3xL3iU"
+            - name: CLOUDINARY_LOGO_FOLDER
+              value: 'internsaathi_uploads'
+            - name: CLOUDINARY_DOCS_FOLDER
+              value: 'internsaathi_profiles'
+          resources:
+            limits:
+              memory: 500Mi
+          volumeMounts:
+      volumes:
