@@ -2,7 +2,7 @@
 FROM node:22 AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci 
+RUN npm install
 COPY . .
 
 # Stage 2: Distroless Runtime
