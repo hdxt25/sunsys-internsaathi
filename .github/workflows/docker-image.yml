@@ -1,9 +1,6 @@
 name: Build & Push Frontend Image
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -31,5 +28,14 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            hdxt25/internsaathi-frontend:v1
-            
+            hdxt25/internsaathi-frontend:v2
+ 
+      - name: Build & Push Backend (amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            hdxt25/internsaathi-backend:v2           
