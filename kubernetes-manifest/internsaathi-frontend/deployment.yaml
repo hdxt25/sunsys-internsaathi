@@ -28,7 +28,7 @@ spec:
       serviceAccountName: internsaathi
       containers:
         - name: internsaathi-frontend
-          image: 'hdxt25/internsaathi-frontend:v1'
+          image: 'hdxt25/internsaathi-frontend:v2'
           imagePullPolicy: IfNotPresent
           ports:
 
